@@ -1,0 +1,6 @@
+---
+# vars file for configure-terminal
+git_url: github.com
+git_user: kevydotvinu
+git_dotfiles_repo: dotfiles
+public_directory: Public

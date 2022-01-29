@@ -1,0 +1,62 @@
+---
+# tasks file for configure-terminal
+- name: Install required packages
+  become: true
+  package:
+    name:
+      - vim
+      - tmux
+      - git
+      - zsh
+      - gnome-terminal
+      - xclip
+      - dconf-cli
+    state: present
+
+- name: Clone git repositories
+  git:
+    repo: "https://{{ git_url }}/{{ git_user }}/{{ git_dotfiles_repo }}.git"
+    dest: "{{ lookup('env', 'HOME') }}/{{ public_directory }}/{{ git_dotfiles_repo }}"
+    force: yes
+
+- name: Copy configuration directories
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/{{ public_directory }}/{{ git_dotfiles_repo }}/{{ item.src }}"
+    dest: "{{ lookup('env', 'HOME') }}/{{ item.dest }}"
+    mode: 0755
+  loop:
+    - { src: .vim, dest: .vim }
+    - { src: .fonts, dest: .fonts }
+  
+- name: Link configuration files
+  file:
+    src: "{{ lookup('env', 'HOME') }}/{{ public_directory }}/{{ git_dotfiles_repo }}/{{ item.src }}"
+    dest: "{{ lookup('env', 'HOME') }}/{{ item.dest }}"
+    mode: 0644
+    state: link
+  loop:
+    - { src: .vimrc, dest: .vimrc }
+    - { src: .tmux.conf, dest: .tmux.conf }
+    - { src: .gitconfig, dest: .gitconfig }
+    - { src: .bashrc, dest: .bashrc }
+    - { src: .zshrc, dest: .zshrc }
+    - { src: .bash_funcs, dest: .bash_funcs }
+    - { src: .bash_alias, dest: .bash_alias }
+    - { src: .bash_exports, dest: .bash_exports }
+
+- name: Clone vim plugin repositories
+  git:
+    repo: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: "https://github.com/tmux-plugins/tpm", dest: "{{ lookup('env', 'HOME') }}/.tmux/tmux-plugins/tpm" }
+    - { src: "https://github.com/VundleVim/Vundle.vim.git", dest: "{{ lookup('env', 'HOME') }}/.vim/bundle/Vundle.vim" }
+    - { src: "https://github.com/zsh-users/zsh-autosuggestions.git", dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" }
+
+- name: Configure gnome-terminal color
+  shell:
+    cmd: "{{ item }}"
+    chdir: "{{ lookup('env', 'HOME') }}/{{ public_directory }}/{{ git_dotfiles_repo }}"
+  with_items:
+    - "dconf reset -f /org/gnome/terminal/"
+    - "dconf load /org/gnome/terminal/ < .gnome-terminal.dconf"

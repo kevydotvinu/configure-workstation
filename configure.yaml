@@ -1,0 +1,5 @@
+---
+- name: Configure workstation
+  hosts: localhost
+  roles:
+    - configure-terminal
