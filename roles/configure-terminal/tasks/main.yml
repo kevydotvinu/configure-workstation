@@ -65,3 +65,4 @@
   with_items:
     - "dconf reset -f /org/gnome/terminal/"
     - "dconf load /org/gnome/terminal/ < .gnome-terminal.dconf"
+    - "vim -E -s -c 'source ~/.vimrc' -c PluginInstall -c qa"
