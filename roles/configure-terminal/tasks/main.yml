@@ -10,8 +10,13 @@
       - zsh
       - gnome-terminal
       - xclip
-      - dconf-cli
     state: present
+
+- include: apt.yaml
+  when: ansible_pkg_mgr == 'apt'
+
+- include: yum.yaml
+  when: ansible_pkg_mgr == 'yum'
 
 - name: Clone git repositories
   git:

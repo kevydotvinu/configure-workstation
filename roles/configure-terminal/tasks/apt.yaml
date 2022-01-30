@@ -1,0 +1,8 @@
+---
+- name: Install required packages using APT
+  become: yes
+  apt:
+    name:
+      - dconf-cli
+    update_cache: yes
+    state: latest

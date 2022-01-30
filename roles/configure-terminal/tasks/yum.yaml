@@ -1,0 +1,7 @@
+---
+- name: Install required packages using YUM
+  become: yes
+  yum:
+    name:
+      - dconf
+    state: latest
