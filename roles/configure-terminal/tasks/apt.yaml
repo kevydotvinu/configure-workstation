@@ -4,5 +4,6 @@
   apt:
     name:
       - dconf-cli
+      - xclip
     update_cache: yes
     state: latest
