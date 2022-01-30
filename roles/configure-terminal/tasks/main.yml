@@ -57,6 +57,11 @@
     - { src: "https://github.com/VundleVim/Vundle.vim.git", dest: "{{ lookup('env', 'HOME') }}/.vim/bundle/Vundle.vim" }
     - { src: "https://github.com/zsh-users/zsh-autosuggestions.git", dest: "{{ lookup('env', 'HOME') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" }
 
+- name: Copy vim grubbox color configuration
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/.vim/bundle/gruvbox/colors/gruvbox.vim"
+    dest: "{{ lookup('env', 'HOME') }}/.vim/colors/gruvbox.vim"
+
 - name: Configure gnome-terminal color
   shell:
     cmd: "{{ item }}"
@@ -65,9 +70,3 @@
     - "dconf reset -f /org/gnome/terminal/"
     - "dconf load /org/gnome/terminal/ < .gnome-terminal.dconf"
     - "vim -E -s -c 'source ~/.vimrc' -c PluginInstall -c qa"
-
-- name: Copy vim grubbox color configuration
-  copy:
-    src: "{{ lookup('env', 'HOME') }}/.vim/bundle/gruvbox/colors/gruvbox.vim"
-    dest: "{{ lookup('env', 'HOME') }}/.vim/colors/gruvbox.vim"
-
